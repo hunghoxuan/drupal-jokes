@@ -105,4 +105,6 @@ configuration options, and usage examples.
 - Use Dependency Injection to inject Service class into Block, Controller.
 - Use GuzzleHttp and Promise (Async) to get multiple data from api: Sync function will not work.
 - Use migrate_plus to allow manual migration using drush.
+- Dynamically create Block instance and render in page 
+- Best practices of Drupal custom module development: Cusom Block, Service, Form, Controller, Custom Node config, Install config, Migrate config, Log ..
 

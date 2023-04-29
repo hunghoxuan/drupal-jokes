@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Module file for Jokes API.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Drupal\jokes_api\Service\JokesApiService;
+
+/**
+ * @defgroup jokes_api
+* @ingroup examples
+ * @{
+ */
+
+/**
+ * Implements hook_install().
+ */
+function jokes_api_install() {
+    JokesApiService::getInstance()->install();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function jokes_api_uninstall() {
+    JokesApiService::getInstance()->uninstall();
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function jokes_api_toolbar() {
+  $examples = _toolbar_routes();
+
+  // Build a list of links for the menu.
+  $links = [];
+  foreach ($examples as $module => $route) {
+    $links[$module] = [
+        'title' => Html::escape($module),
+        'url' => count($route) == 1 ? Url::fromRoute($route[0]) : Url::fromRoute($route[0], $route[1]),
+        'attributes' => [
+          'class' => [Html::getClass($module)],
+          'title' => Html::escape($module),
+        ],
+        'fragment' => count($route) == 3 ? $route[2] : null,
+      ];
+  }
+
+  // Create the examples toolbar render array.
+  $items['Jokes FFW'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Jokes FFW'),
+      '#url' => Url::fromRoute('<front>'),
+      '#attributes' => [
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Jokes FWW'),
+      'shortcuts' => [
+        '#theme' => 'links__toolbar_example',
+        '#links' => $links,
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 99,
+    '#attached' => [
+      'library' => [
+        
+      ],
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Get a list of toolbar links for testing toolbar routes.
+ */
+function _toolbar_routes() {
+  return [
+    'List' => ['jokes_api.list'],
+    'Migrate' => ['jokes_api.migrate'],
+    'Settings' => ['jokes_api.settings'],
+    'Manage Data' => ['system.admin_content', ['type' => 'jokes']],
+    'Logs' => ['dblog.overview', ['type[]' => 'jokes_api']],
+    'Modules' => ['system.modules_list', ['type' => 'jokes'], 'edit-modules-ffw']
+  ];
+}
+
+/**
+ * @} End of 'defgroup jokes_api'.
+ */

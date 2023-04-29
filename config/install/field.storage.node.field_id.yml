@@ -1,6 +1,9 @@
 langcode: en
 status: true
 dependencies:
+  enforced:
+    module:
+    - jokes_api
   module:
     - node
 id: node.field_id
@@ -11,7 +14,7 @@ settings:
   max_length: 255
   case_sensitive: false
   is_ascii: false
-module: core
+module: jokes_api
 locked: false
 cardinality: 1
 translatable: true

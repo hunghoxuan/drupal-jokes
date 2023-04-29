@@ -30,16 +30,29 @@ Module files structure:
 - drush/drush: latest
 - drupal/migrate_plus: latest
 
-2. Manual install module:
+2. Install module:
+Option 1: Use UI: 
 - copy jokes_api folder into drupal project [\{drupalroot}\web\custom\jokes_api]
-- enable jokes_api in Drupal UI (Admin > Manage > Extends), or using drush command:
+  or use command:
+ ```
+ cd drupal_root\web\modules\custom
+ git clone https://github.com/hunghoxuan/drupal-jokes jokes_api 
+ ```
+- goto Admin > Extends > Select module Jokes_api > click Install
+
+Option 2: Manually install:
+- enable jokes_api in Drupal UI (Admin > Manage > Extends)
+
+Option 3: Use drush
 ```
-vendor/bin/drush en jokes_api 
+drush en jokes_api 
 ```
 
 3. Migrate/ Import data:
-- Option 1: goto admin Jokes > Migrate (/jokes_api/migrate). Enter params (auto published / number of imported rows) and click [Migrate]
-- Option 2: use drush command
+Option 1: User UI:
+- goto Admin > Jokes > Migrate (/jokes_api/migrate). Enter params (auto published / number of imported rows) and click [Migrate]
+
+Option 2: use drush
 ```
 vendor/bin/drush migrate:import jokes_api_json 
 ```
@@ -62,7 +75,8 @@ including selecting which data to import.
  url: /jokes_api/migrate
  input params:
  - number of imported rows per time: 5
- - 
+ - api_url
+ - entity_type
 ```
 4. The imported data is stored in custom Drupal entities that are defined by the
 module.
@@ -85,5 +99,9 @@ and data import errors.
 7. The module should include appropriate documentation, including installation instructions,
 configuration options, and usage examples.
 
-## Development
-- 
+## Technical hightlights: bellow is techniques / features applied in this project
+- Use Clean architecture: use Service class for all common functions.
+- Use Dependency Injection to inject Service class into Block, Controller.
+- Use GuzzleHttp and Promise (Async) to get multiple data from api: Sync function will not work.
+- Use migrate_plus to allow manual migration using drush.
+

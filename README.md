@@ -24,16 +24,31 @@ Module files structure:
     ├── jokes_api.routing.yml: routing file, include 3 files
     └── jokes_api.info.yml
 ```
-- jokes_api
-  - config
-    - install: custom entity type & fields configuration.
-  - 
 ## Setup
+1. Requirements
+- drupal 10
+- drush/drush: latest
+- drupal/migrate_plus: latest
+
+2. Manual install module:
+- copy jokes_api folder into drupal project [\{drupalroot}\web\custom\jokes_api]
+- enable jokes_api in Drupal UI (Admin > Manage > Extends), or using drush command:
+```
+vendor/bin/drush en jokes_api 
+```
+
+3. Migrate/ Import data:
+- Option 1: goto admin Jokes > Migrate (/jokes_api/migrate). Enter params (auto published / number of imported rows) and click [Migrate]
+- Option 2: use drush command
+```
+vendor/bin/drush migrate:import jokes_api_json 
+```
 
 ## Results / Features
-1. Setup:
-- 
-- Compatible with Drupal 8.x | 9.x | 10.x. Tested in Drupal 10.x.
+1. Developed & tested on Environment:
+- PHP 8.2.0
+- SQLite
+- Drupal 10.x
 2. Provide a user interface for configuring the API connection, including
 API endpoint URL and data mapping settings.
 ```

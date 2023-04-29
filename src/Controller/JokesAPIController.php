@@ -5,7 +5,7 @@ namespace Drupal\jokes_api\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 /**
  * @ingroup jokes_api
@@ -22,7 +22,7 @@ class JokesAPIController extends ControllerBase
   /**
    * Service for Jokes API.
    *
-   * @var JokesApiService
+   * @var JokesApi
    */
   protected $service;
 
@@ -30,9 +30,9 @@ class JokesAPIController extends ControllerBase
    * Constructs a new Controller instance.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
-   * @param JokesApiService $service
+   * @param JokesApi $service
    */
-  public function __construct(AccountInterface $current_user, JokesApiService $service)
+  public function __construct(AccountInterface $current_user, JokesApi $service)
   {
     $this->currentUser = $current_user;
     $this->service = $service;
@@ -54,7 +54,7 @@ class JokesAPIController extends ControllerBase
    */
   protected function getModuleName()
   {
-    return JokesApiService::MODULE_NAME;
+    return JokesApi::MODULE_NAME;
   }
 
   /**

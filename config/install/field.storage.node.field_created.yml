@@ -4,9 +4,6 @@ dependencies:
   module:
     - datetime
     - node
-  enforced:
-    module:
-      - jokes_api
 id: node.field_created
 field_name: field_created
 entity_type: node

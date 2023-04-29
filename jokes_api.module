@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 /**
  * @defgroup jokes_api
@@ -19,14 +19,14 @@ use Drupal\jokes_api\Service\JokesApiService;
  * Implements hook_install().
  */
 function jokes_api_install() {
-    JokesApiService::getInstance()->install();
+    JokesApi::getInstance()->install();
 }
 
 /**
  * Implements hook_uninstall().
  */
 function jokes_api_uninstall() {
-    JokesApiService::getInstance()->uninstall();
+    JokesApi::getInstance()->uninstall();
 }
 
 /**

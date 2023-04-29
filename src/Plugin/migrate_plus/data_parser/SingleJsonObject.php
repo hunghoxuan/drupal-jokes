@@ -3,7 +3,7 @@
 namespace Drupal\jokes_api\Plugin\migrate_plus\data_parser;
 
 use Drupal\migrate_plus\Plugin\migrate_plus\data_parser\Json;
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 /**
  * Obtain JSON data for migration.
@@ -22,7 +22,7 @@ class SingleJsonObject extends Json
 
   protected function getSourceData($url): array
   {
-    $service = JokesApiService::getInstance();
+    $service = JokesApi::getInstance();
     $importedData = $service->getImportedJokes($url, 5);
 
     // $source_data = parent::getSourceData($url);

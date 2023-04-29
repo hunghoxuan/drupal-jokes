@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\Client;
 use function GuzzleHttp\Promise\each_limit;
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 
 /**
@@ -39,7 +39,7 @@ class MigrateForm extends ConfigFormBase
    */
   public function buildForm(array $form, FormStateInterface $form_state)
   {
-    $service = JokesApiService::getInstance();
+    $service = JokesApi::getInstance();
 
     $form['description'] = [
       '#type' => 'markup',
@@ -52,19 +52,19 @@ class MigrateForm extends ConfigFormBase
       '#default_value' => 5,
     ];
 
-    $form['api_url'] = [
+    $form[JokesApi::PARAM_API_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('API URL'),
       '#default_value' => $service->getApiUrl(),
     ];
 
-    $form['node_type'] = [
+    $form[JokesApi::PARAM_NODE_TYPE] = [
       '#type' => 'textfield',
       '#title' => $this->t('Node Type'),
       '#default_value' => $service->getNodeType(),
     ];
 
-    $form['default_status'] = [
+    $form[JokesApi::PARAM_DEFAULT_STATUS] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Auto publish imported nodes'),
       '#default_value' => $service->getDefaultPublishStatus(),
@@ -88,10 +88,10 @@ class MigrateForm extends ConfigFormBase
    */
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $service = JokesApiService::getInstance();
+    $service = JokesApi::getInstance();
 
-    $url = $form_state->getValue('api_url');
-    $default_status = $form_state->getValue('default_status');
+    $url = $form_state->getValue(JokesApi::PARAM_API_URL);
+    $default_status = $form_state->getValue(JokesApi::PARAM_DEFAULT_STATUS);
     $rows_number = $form_state->getValue('rows_number');
 
     // $promise->wait();

@@ -1,0 +1,14 @@
+# node.type.jokes.yml
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - jokes_api 
+name: 'Jokes'
+type: jokes
+description: 'Custom Content Type for Jokes in chucknorris'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

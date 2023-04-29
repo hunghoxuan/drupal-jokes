@@ -1,0 +1,10 @@
+#jokes p {
+	padding: .5em;
+    background: lavender;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+#jokes p:nth-child(2n+1) {
+	padding: .5em;
+    background: lightcyan;
+}

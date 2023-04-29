@@ -10,7 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 
 /**
@@ -21,7 +21,7 @@ use Drupal\jokes_api\Service\JokesApiService;
  *   admin_label = @Translation("Jokes API block"),
  * )
  */
-class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFactoryPluginInterface
+class JokesApiBlock extends BlockBase implements BlockPluginInterface, ContainerFactoryPluginInterface
 {
   /**
    * @var Service
@@ -32,7 +32,7 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    JokesApiService $service
+    JokesApi $service
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->service = $service;
@@ -58,8 +58,8 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
   {
     // get existing configuration for this block
     $config = $this->getConfiguration();
-    $page_size = $config['page_size'];
-    $config['api_url'] = $this->service->getApiUrl();
+    $page_size = $config[JokesApi::PARAM_PAGE_SIZE];
+    $config[JokesApi::PARAM_API_URL] = $this->service->getApiUrl();
 
     // build an array of data to send to the JS file
     $rows = $this->service->getJokes($page_size);
@@ -69,7 +69,7 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
 
     // show random joke by calling api url directly
     $build['random'] = [
-      '#markup' => '<div id="jokes"></div>',
+      '#markup' => '<h2>Random Joke</h2><div id="jokes"></div>',
       '#attached' => [
         'library' => ['jokes_api/jokesapi'],
         'drupalSettings' => [
@@ -127,10 +127,10 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
     $config = $this->getConfiguration();
 
     // Add a form field to the existing block config form
-    $form['page_size'] = [
+    $form[JokesApi::PARAM_PAGE_SIZE] = [
       '#type' => 'textfield',
       '#title' => t('Page Size'),
-      '#default_value' => isset($config['page_size']) ? $config['page_size'] : $this->service->getPageSize(),
+      '#default_value' => isset($config[JokesApi::PARAM_PAGE_SIZE]) ? $config[JokesApi::PARAM_PAGE_SIZE] : $this->service->getPageSize(),
     ];
 
     return $form;
@@ -142,7 +142,7 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
   public function blockSubmit($form, FormStateInterface $form_state)
   {
     // save custom settings when the form is submitted
-    $this->setConfigurationValue('page_size', $form_state->getValue('page_size'));
+    $this->setConfigurationValue(JokesApi::PARAM_PAGE_SIZE, $form_state->getValue(JokesApi::PARAM_PAGE_SIZE));
   }
 
   /**
@@ -150,17 +150,17 @@ class JokesApi extends BlockBase implements BlockPluginInterface, ContainerFacto
    */
   public function blockValidate($form, FormStateInterface $form_state)
   {
-    $output_limit = $form_state->getValue('page_size');
+    $output_limit = $form_state->getValue(JokesApi::PARAM_PAGE_SIZE);
 
     // validate the input; needs a numeric value between 1 and 10
     if (!is_numeric($output_limit)) {
-      $form_state->setErrorByName('page_size', t('Needs to be an integer!'));
+      $form_state->setErrorByName(JokesApi::PARAM_PAGE_SIZE, t('Needs to be an integer!'));
     }
     if ($output_limit < 1) {
-      $form_state->setErrorByName('page_size', t('Needs to be greater than zero!'));
+      $form_state->setErrorByName(JokesApi::PARAM_PAGE_SIZE, t('Needs to be greater than zero!'));
     }
     if ($output_limit > 10) {
-      $form_state->setErrorByName('page_size', t('Max allowed is 10!'));
+      $form_state->setErrorByName(JokesApi::PARAM_PAGE_SIZE, t('Max allowed is 10!'));
     }
   }
 }

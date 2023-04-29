@@ -2,11 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - text
     - node
-  enforced:
-    module:
-      - jokes_api
 id: node.field_id
 field_name: field_id
 entity_type: node
@@ -15,7 +11,7 @@ settings:
   max_length: 255
   case_sensitive: false
   is_ascii: false
-module: jokes_api
+module: core
 locked: false
 cardinality: 1
 translatable: true

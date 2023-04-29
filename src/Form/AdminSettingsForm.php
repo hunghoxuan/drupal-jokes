@@ -4,7 +4,7 @@ namespace Drupal\jokes_api\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\jokes_api\Service\JokesApiService;
+use Drupal\jokes_api\Service\JokesApi;
 
 /**
  * Class AdminSettingsForm.
@@ -37,41 +37,41 @@ class AdminSettingsForm extends ConfigFormBase
    */
   public function buildForm(array $form, FormStateInterface $form_state)
   {
-    $config = JokesApiService::getInstance()->getSettings();
+    $config = JokesApi::getInstance()->getSettings();
 
     $form['description'] = [
       '#type' => 'markup',
       '#markup' => $this->t('Global settings for Jokes FFW module.'),
     ];
 
-    $form['api_url'] = [
+    $form[JokesApi::PARAM_API_URL] = [
       '#type' => 'textfield',
       '#title' => $this->t('API URL'),
-      '#default_value' => $config->get('api_url'),
+      '#default_value' => $config->get(JokesApi::PARAM_API_URL),
     ];
 
-    $form['node_type'] = [
+    $form[JokesApi::PARAM_NODE_TYPE] = [
       '#type' => 'textfield',
       '#title' => $this->t('Node Type'),
-      '#default_value' => $config->get('node_type'),
+      '#default_value' => $config->get(JokesApi::PARAM_NODE_TYPE),
     ];
 
-    $form['page_size'] = [
+    $form[JokesApi::PARAM_PAGE_SIZE] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default Page Size'),
-      '#default_value' => $config->get('page_size'),
+      '#default_value' => $config->get(JokesApi::PARAM_PAGE_SIZE),
     ];
 
-    $form['default_status'] = [
+    $form[JokesApi::PARAM_DEFAULT_STATUS] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Auto publish imported nodes'),
-      '#default_value' => $config->get('default_status'),
+      '#default_value' => $config->get(JokesApi::PARAM_DEFAULT_STATUS),
     ];
 
-    $form['show_published'] = [
+    $form[JokesApi::PARAM_SHOW_PUBLISHED] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Only show published nodes'),
-      '#default_value' => $config->get('show_published'),
+      '#default_value' => $config->get(JokesApi::PARAM_SHOW_PUBLISHED),
     ];
 
     $form['submit'] = [
@@ -87,16 +87,16 @@ class AdminSettingsForm extends ConfigFormBase
    */
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
-    $config = JokesApiService::getInstance()->getSettingsForEdit();
-    $config->set('api_url', $form_state->getValue('api_url'));
-    $config->set('node_type', $form_state->getValue('node_type'));
-    $config->set('page_size', $form_state->getValue('page_size'));
-    $config->set('default_status', $form_state->getValue('default_status'));
-    $config->set('show_published', $form_state->getValue('show_published'));
+    $config = JokesApi::getInstance()->getSettingsForEdit();
+    $config->set(JokesApi::PARAM_API_URL, $form_state->getValue(JokesApi::PARAM_API_URL));
+    $config->set(JokesApi::PARAM_NODE_TYPE, $form_state->getValue(JokesApi::PARAM_NODE_TYPE));
+    $config->set(JokesApi::PARAM_PAGE_SIZE, $form_state->getValue(JokesApi::PARAM_PAGE_SIZE));
+    $config->set(JokesApi::PARAM_DEFAULT_STATUS, $form_state->getValue(JokesApi::PARAM_DEFAULT_STATUS));
+    $config->set(JokesApi::PARAM_SHOW_PUBLISHED, $form_state->getValue(JokesApi::PARAM_SHOW_PUBLISHED));
 
     $config->save();
 
-    JokesApiService::getInstance()->clearCache();
+    JokesApi::getInstance()->clearCache();
     parent::submitForm($form, $form_state);
   }
 }

@@ -15,6 +15,7 @@ Module files structure:
     ├── src
     │   ├── Controller: logic & ui build of List screen
     │   ├── Form: logic & ui build Settings, Migration forms
+    │   ├── Service: Service class for common functions
     │   └── Plugin:
     │       ├── Block: Custom block to display Jokes
     │       └── migrate_plus: Custom data parser to convert 

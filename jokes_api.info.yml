@@ -1,0 +1,9 @@
+name: Jokes API
+type: module
+description: Define a custom Jokes API block.
+core_version_requirement: ^8.8.0 || ^9 || ^10
+package: FFW
+dependencies:
+  - drupal:block
+  - drupal:migrate
+  - drupal:migrate_plus

@@ -1,0 +1,23 @@
+jokes_api.list:
+  path: '/jokes_api/list'
+  defaults:
+    _controller: '\Drupal\jokes_api\Controller\JokesAPIController::list'
+    _title: 'Jokes'
+  requirements:
+    _permission: 'no access'
+
+jokes_api.migrate:
+  path: '/jokes_api/migrate'
+  defaults:
+    _form: '\Drupal\jokes_api\Form\MigrateForm'
+    _title: 'Migrate'
+  requirements:
+    _permission: 'access content'
+
+jokes_api.settings:
+  path: '/jokes_api/settings'
+  defaults:
+    _form: '\Drupal\jokes_api\Form\AdminSettingsForm'
+    _title: 'Settings'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_content
+field_name: field_content
+entity_type: node
+type: string
+settings:
+  max_length: 5000
+  case_sensitive: false
+  is_ascii: false
+module: jokes_api
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

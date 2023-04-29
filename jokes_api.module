@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * @file
+ * Module file for Jokes API.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+
+/**
+ * @defgroup jokes_api
+* @ingroup examples
+ * @{
+ */
+
+/**
+ * Implements hook_install().
+ */
+function jokes_api_install() {
+  // Set default values for config which require dynamic values.
+  \Drupal::configFactory()->getEditable('jokes_api.settings')
+    ->set('api_url', 'https://api.chucknorris.io/jokes/random')
+    ->set('node_type', 'jokes')
+    ->set('page_size', 5)
+    ->set('default_status', false)
+    ->set('show_published', true)
+    ->save();
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function jokes_api_toolbar() {
+  $examples = _toolbar_routes();
+
+  // Build a list of links for the menu.
+  $links = [];
+  foreach ($examples as $module => $route) {
+
+    $links[$module] = [
+        'title' => Html::escape($module),
+        'url' => Url::fromRoute($route),
+        'attributes' => [
+          'class' => [Html::getClass($module)],
+          'title' => Html::escape($module),
+        ],
+      ];
+  }
+
+  // Create the examples toolbar render array.
+  $items['Jokes FFW'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Jokes FWW'),
+      '#url' => Url::fromRoute('<front>'),
+      '#attributes' => [
+        'title' => t('Developer Examples'),
+        'class' => ['toolbar-icon', 'toolbar-icon-examples'],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Developer Examples'),
+      'shortcuts' => [
+        '#theme' => 'links__toolbar_example',
+        '#links' => $links,
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 99,
+    '#attached' => [
+      'library' => [
+        
+      ],
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function jokes_api_toolbar1() {
+  $examples = _toolbar_routes();
+
+  // Build a list of links for the menu.
+  $links = [];
+  foreach ($examples as $module => $route) {
+
+    // Check if module is installed or not.
+    if (\Drupal::moduleHandler()->moduleExists($module)) {
+
+      // Get the module info (title, description) from Drupal.
+      $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
+
+      // If there's no info, the example isn't enabled, so don't display it.
+      if (!empty($info)) {
+        $links[$module] = [
+          'title' => Html::escape($info['name']),
+          'url' => Url::fromRoute($route),
+          'attributes' => [
+            'class' => [Html::getClass($module)],
+            'title' => Html::escape($info['description']),
+          ],
+        ];
+      }
+    }
+  }
+
+  // Add a link to enable all examples.
+  $links['enable_examples'] = [
+    'title' => t('Enable modules'),
+    'url' => Url::fromRoute('system.modules_list'),
+    'options' => [
+      'title' => t('Enable more examples in on the Extend page.'),
+    ],
+    'fragment' => 'edit-modules-ffw',
+  ];
+
+  // Create the examples toolbar render array.
+  $items['Jokes FFW'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Jokes FWW'),
+      '#url' => Url::fromRoute('<front>'),
+      '#attributes' => [
+        'title' => t('Developer Examples'),
+        'class' => ['toolbar-icon', 'toolbar-icon-examples'],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Developer Examples'),
+      'shortcuts' => [
+        '#theme' => 'links__toolbar_example',
+        '#links' => $links,
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 99,
+    '#attached' => [
+      'library' => [
+        
+      ],
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Get a list of toolbar links for testing toolbar routes.
+ */
+function _toolbar_routes() {
+  return [
+    'List' => 'jokes_api.list',
+    'Migrate' => 'jokes_api.migrate',
+    'Settings' => 'jokes_api.settings' 
+  ];
+}
+
+/**
+ * @} End of 'defgroup jokes_api'.
+ */

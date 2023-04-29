@@ -1,0 +1,62 @@
+# Migration configuration for jokes.
+id: jokes_api_json
+label: JSON feed of jokes
+migration_group: jokes
+migration_tags:
+  - "FFW"
+  - "Jokes"
+
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  urls: 
+  - https://api.chucknorris.io/jokes/random
+  headers:
+    Accept: 'application/json; charset=utf-8'
+    Content-Type: application/json
+
+  data_parser_plugin: single_json_object # returns an array of objects, instead of a single object
+
+  item_selector: NULL # extract data at root level
+  fields:
+    - name: id
+      label: 'ID'
+      selector: id
+    - name: body
+      label: 'Joke Content'
+      selector: value
+    - name: description
+      label: 'Joke Url'
+      selector: url
+  ids:
+    id:
+      type: string
+
+destination:
+  plugin: entity:node
+
+process:
+  type:
+    plugin: default_value
+    default_value: jokes
+  title: body
+  body: body
+  field_id: id
+  field_url: description
+  field_content: body
+  field_created: created_at
+  status:
+    plugin: default_value
+    default_value: 0
+  sticky:
+    plugin: default_value
+    default_value: 0
+  uid:
+    plugin: default_value
+    default_value: 0
+
+migration_dependencies: {}
+dependencies:
+  enforced:
+    module:
+      - jokes_api

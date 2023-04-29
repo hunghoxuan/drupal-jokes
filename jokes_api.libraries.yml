@@ -1,0 +1,11 @@
+jokesapi:
+  version: 1.x
+  header: false
+  css:
+    theme:
+      css/jokesapi.css: {}
+  js:
+    js/jokesapi.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings

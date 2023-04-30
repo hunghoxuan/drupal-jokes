@@ -6,7 +6,8 @@
 
   // pull in the needed values and set the vars
   const api_url = drupalSettings.config.api_url;
-  console.log(JSON.stringify(drupalSettings.config));
+  //alert(api_url);
+  //console.log('api_url', api_url);
   const jokeCont = document.getElementById('jokes');
 
   //console.log(JokesApi::PARAM_API_URL, api_url);

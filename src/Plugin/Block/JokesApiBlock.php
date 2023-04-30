@@ -9,6 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 use Drupal\jokes_api\Service\JokesApi;
 
@@ -62,7 +64,12 @@ class JokesApiBlock extends BlockBase implements BlockPluginInterface, Container
     $config[JokesApi::PARAM_API_URL] = $this->service->getApiUrl();
 
     // build an array of data to send to the JS file
-    $rows = $this->service->getJokes($page_size);
+    $jokes = $this->service->getJokes($page_size);
+    $headers = [$this->t('Joke'), $this->t('Link')];
+    $rows = [];
+    foreach ($jokes as $joke) {
+      $rows[] = [$joke['title'], Link::fromTextAndUrl($this->t('Open'), Url::fromUri($joke['url']))];
+    }
 
     // make build array (output elements)
     $build = [];
@@ -80,14 +87,14 @@ class JokesApiBlock extends BlockBase implements BlockPluginInterface, Container
     ];
 
     $build['seperator1'] = [
-      '#markup' => '<br/>',
+      '#markup' => '<br/><h2>All Jokes</h2></b>',
       '#weight' => 2,
     ];
 
     // show existing nodes imported in db
     $build['rows'] = [
       '#type' => 'table',
-      '#header' => [$this->t('NID'), $this->t('Content'), $this->t('Created')],
+      '#header' => $headers,
       '#rows' => $rows,
       '#empty' => $this->t('No data found'),
       '#weight' => 20,

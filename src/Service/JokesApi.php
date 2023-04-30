@@ -13,19 +13,19 @@ use Drupal\Core\Url;
 class JokesApi
 {
   const MODULE_NAME = 'jokes_api';
-  const NODE_TYPE = 'jokes';
   const API_URL = 'https://api.chucknorris.io/jokes/random';
 
+  const NODE_TYPE = 'jokes';
+  const FIELD_CREATED = 'field_created';
+  const FIELD_ID = 'field_id';
+  const FIELD_URL = 'field_url';
+  const FIELD_CONTENT = 'field_content';
 
   const PARAM_API_URL = 'api_url';
   const PARAM_NODE_TYPE = 'node_type';
   const PARAM_PAGE_SIZE = 'page_size';
   const PARAM_DEFAULT_STATUS = 'default_status';
   const PARAM_SHOW_PUBLISHED = 'show_published';
-  const FIELD_CREATED = 'field_created';
-  const FIELD_ID = 'field_id';
-  const FIELD_URL = 'field_url';
-  const FIELD_CONTENT = 'field_content';
 
   public function getModuleId()
   {
@@ -247,9 +247,11 @@ class JokesApi
     foreach ($nids as $nid) {
       $node = \Drupal\node\Entity\Node::load($nid);
       $rows[] = [
-        'nid' => $node->access('view') ? $node->id() : $this->t('Confidential'),
-        'title' => $node->access('view') ?  $node->getTitle() : $this->t('Confidential'),
-        'created' => $node->access('view') ? substr($node->get('field_created')->getString(), 0, 10) : $this->t('Confidential'),
+        'title' => $node->getTitle(),
+        'url' => $node->get('field_url')->getString(),
+        'id' => $node->get('field_id')->getString(),
+        'content' => $node->get('field_content')->getString(),
+        'created' => substr($node->get('field_created')->getString(), 0, 10),
       ];
     }
     return $rows;

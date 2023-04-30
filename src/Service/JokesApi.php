@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use function GuzzleHttp\Promise\each_limit;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
+use Drupal\jokes_api\Controller\JokesAPIController;
 
 /**
  * @ingroup jokes_api
@@ -58,6 +59,7 @@ class JokesApi
 
   public function uninstall()
   {
+    //delete data
     if ($this->entityTypeHasField('node', JokesApi::FIELD_CREATED)) { // avoid entityTypeManager->loadByProperties crashing
       $nids = \Drupal::entityQuery("node")
         ->condition("type", $this->getNodeType())
@@ -72,6 +74,25 @@ class JokesApi
           $storage_handler->delete($nodes);
         }
       };
+    }
+
+    //delete config -- remove all the configs you imported from config/install
+    //manual option: in the yml file you can put the dependencies/enforced/module
+    $module_path = \Drupal::service('extension.list.module')->getPath(JokesAPI::MODULE_NAME) . '/config/install';
+
+    $configs = [];
+    $files = \Drupal::service('file_system')->scanDirectory($module_path, '/\.yml$/');
+
+    if ($files) {
+      foreach ($files as $file) {
+        $configs[] = $file->name;
+      }
+
+      foreach ($configs as $config_name) {
+        echo "Delete config: $config_name \n";
+        \Drupal::configFactory()->getEditable($config_name)->delete();
+      }
+      return TRUE;
     }
   }
 
@@ -217,16 +238,20 @@ class JokesApi
   // save Joke
   public function saveJoke($content, $url, $id, $created, $default_status)
   {
-    $node = \Drupal\node\Entity\Node::create([
-      'type'  => $this->getNodeType(),
-      'title' => $content,
-      'field_content' => $content,
-      'field_url' => $url,
-      'field_id' => $id,
-      'field_created' => $created,
-      'status' => $default_status
-    ]);
-    $node->save();
+    try {
+      $node = \Drupal\node\Entity\Node::create([
+        'type'  => $this->getNodeType(),
+        'title' => $content,
+        'field_content' => $content,
+        'field_url' => $url,
+        'field_id' => $id,
+        'field_created' => $created,
+        'status' => $default_status
+      ]);
+      $node->save();
+    } catch (\Exception $e) {
+      $this->logError("Failed to import joke #$id: " . $e->getMessage());
+    }
   }
 
   // get Jokes data for the block

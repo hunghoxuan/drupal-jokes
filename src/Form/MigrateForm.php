@@ -49,7 +49,7 @@ class MigrateForm extends ConfigFormBase
     $form['rows_number'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Number of rows to migrate'),
-      '#default_value' => 5,
+      '#default_value' => $service->getPageSize(),
     ];
 
     $form[JokesApi::PARAM_API_URL] = [
@@ -96,6 +96,7 @@ class MigrateForm extends ConfigFormBase
 
     // $promise->wait();
     $importedData = $service->getImportedJokes($url, $rows_number);
+    $success_number = count($importedData);
 
     foreach ($importedData as $data) {
       $url = $data['url'];
@@ -106,6 +107,8 @@ class MigrateForm extends ConfigFormBase
       // Create node object with attached file.
       $service->saveJoke($content, $url, $id, $created, $default_status);
     }
+
+    $service->logInfo("Migrate completed. $success_number / $rows_number saved successfully!");
     parent::submitForm($form, $form_state);
   }
 }

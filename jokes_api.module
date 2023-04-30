@@ -20,6 +20,7 @@ use Drupal\jokes_api\Service\JokesApi;
  */
 function jokes_api_install() {
     JokesApi::getInstance()->install();
+    JokesApi::getInstance()->logInfo('Jokes API Installed');
 }
 
 /**
@@ -27,6 +28,7 @@ function jokes_api_install() {
  */
 function jokes_api_uninstall() {
     JokesApi::getInstance()->uninstall();
+    JokesApi::getInstance()->logInfo('Jokes API UnInstalled');
 }
 
 /**

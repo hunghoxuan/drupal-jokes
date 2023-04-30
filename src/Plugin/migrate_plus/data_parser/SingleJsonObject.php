@@ -23,8 +23,12 @@ class SingleJsonObject extends Json
   protected function getSourceData($url): array
   {
     $service = JokesApi::getInstance();
-    $importedData = $service->getImportedJokes($url, 5);
+    $rows_number = $service->getPageSize();
+    $importedData = $service->getImportedJokes($url, $rows_number);
+    $imported_number = count($importedData);
+    $service->logInfo("Migrated $imported_number / $rows_number jokes.");
 
+    // direct method, return array instead of single node, import directly single joke at a time
     // $source_data = parent::getSourceData($url);
     // if ($this->has_string_keys($source_data)) {
     //   $sequential_array = [];
